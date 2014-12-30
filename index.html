@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>Tiny Speech Synth in JavaScript</title>
+
+<!-- original code @ http://heckmeck.de/demoscene/tiny-speech-synth-js/ -->
+
+<style>
+body {font-family:sans-serif;font-size:18px;background-color:#fff;margin:30px;}
+p,li,ul {line-height:120%;}
+a {color:#db3908;}
+button { padding:4px 10px;font-size:18px;width:140px;}
+textarea {width:478px;height:120px;padding:10px;font-size:14px;border:1px solid #666;background-color:#fe8;}
+form {text-align:right;width:500px;margin:0 auto;}
+input {width:50px;border:1px solid #666;padding:5px;background-color:#fe8;font-size:18px;}
+</style>
+</head>
+<body>
+
+<h1>Tiny Speech Synth in JavaScript</h1>
+
+<p><i>losso/code red, 2012-04-13</i></p>
+
+<p><a href="http://pouet.net/prod.php?which=50530">Tiny Speech Synth</a> is a compact speech synthesizer
+by stan_1901 (Andrey Stephanov) written in C++.</p>
+<p>This is a direct JavaScript port of that code. Try it out below!</p>
+<p>Original code @ <a href="http://heckmeck.de/demoscene/tiny-speech-synth-js/">http://heckmeck.de/demoscene/tiny-speech-synth-js/</a></p>
+<form action="javascript:void(0);">
+<textarea id="text">
+taini spitS sinT in djavaskript
+</textarea>
+<br/>Base frequency <input id="f0" value="60" /><br/>Speed <input id="speed" value="1.5"/><br/>
+<button onclick="speakClicked();return false">Speak text</button>
+</form>
+
+<p>Available phonemes:</p>
+
+<ul><li>a, e, E, i, o, u </li><li>b, d, f, g, h,  j, k, l, m, n, p, r, s, S, t, T, v, w, z, Z</li></ul>
+
+<p>Grab the <a href="tss.js">source code</a> and enjoy!</p>
+
+<p><strong>Note:</strong> A different, <s>trimmed-down</s> crazily optimized JavaScript port of the same speech synthesizer is
+used in <a href="http://www.p01.org/releases/JS1K_Speech_Synthesizer/">p01’s JS1K entry</a>.
+Also, I used a subset of my version in <a href="http://pouet.net/prod.php?which=59167">THE A-WORD</a> (a four-phoneme subset, obviously).</p>
+
+<script src="tss.js"></script>
+<script src="gui.js"></script>
