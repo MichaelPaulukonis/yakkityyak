@@ -57,6 +57,9 @@ var g_phonemes = {
 
 // Synthesizes speech and adds it to specified buffer
 function SynthSpeech ( buf, text, f0, speed, bufPos ) {
+
+    console.log("bufLength: " + buf.length + " bufPos: " + bufPos);
+
     var startBuf = bufPos;
 
     // Debug

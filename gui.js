@@ -10,7 +10,7 @@ var speakClicked = function() {
         var text  = document.getElementById("text").value;
         var repeat = document.getElementById('repeat').value;
 
-        var seconds = 60;
+        var seconds = 30;
         var waveBytes = SAMPLE_FREQUENCY * 2 * 2 * seconds;
 
         console.log('freq: ' + f0 + '\nspeed: ' + speed + '\nwaveBytes: ' + waveBytes);
@@ -22,12 +22,20 @@ var speakClicked = function() {
         // at any rate, this is currently stuck at max 30 seconds....
 
         var buf = new Int16Array(new ArrayBuffer(waveBytes));
+
+        console.log('length of buf before: ' + buf.length);
+
         var b = SynthSpeech(buf, text, f0, speed, 0);
 
         console.log(b);
 
+
+        console.log('length of buf before: ' + buf.length);
+
         // reduce size of buffer if < 30 seconds
         buf = buf.subarray(0, b);
+
+        console.log('length of buf after:  ' + buf.length);
 
         // there doesn't seem to be an easy way to repeat
         // http://jsfiddle.net/tfSTh/1/
@@ -53,14 +61,14 @@ var playAudioBuffer = function(buf) {
             + btoa(atob("UklGRti/UABXQVZFZm10IBAAAAABAAIARKwAABCxAgAEABAAZGF0YbS/UAA")
                    + audioString);
 
-    var player = document.getElementById('audio');
-    if (player) {
-        player.src = data;
-    } else {
-        var audio = new Audio(data);
-        console.log("play()!");
-        audio.play();
-    }
+    var player = document.getElementById('audio') || new Audio();
+    // proof-of-concept: for repetition....
+    // http://stackoverflow.com/questions/16874529/playing-sounds-sequentially-html5?rq=1
+    player.onended = function() { console.log('all done playing!'); };
+    player.src = data;
+    console.log("play()!");
+    player.play();
+
 };
 
 // TODO: parse opts to see if we've passed in new defaults
