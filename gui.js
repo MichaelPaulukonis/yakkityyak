@@ -13,36 +13,68 @@ var speakClicked = function() {
         var seconds = 30;
         var waveBytes = SAMPLE_FREQUENCY * 2 * 2 * seconds;
 
-        console.log('freq: ' + f0 + '\nspeed: ' + speed + '\nwaveBytes: ' + waveBytes);
+        // remove everything but spaces and the acceptable phoenemes
+        // a, e, E, i, o, u
+        // b, d, f, g, h, j, k, l, m, n, p, r, s, S, t, T, v, w, z, Z
 
-        // TODO: if auto-chunk is true
-        // break the buffer into chunks
-        // and parse each chunk
-        // ooooh! and maybe change speed and frequency for each chunk....
-        // at any rate, this is currently stuck at max 30 seconds....
+        console.log('text: ' + text);
 
-        var buf = new Int16Array(new ArrayBuffer(waveBytes));
+        text = text.replace(/[^aeEioubdfghjklmnprsStTvwzZ]/g, '');
 
-        console.log('length of buf before: ' + buf.length);
+        console.log('phoenemes: ' + text);
 
-        var b = SynthSpeech(buf, text, f0, speed, 0);
+        var chunks = text.split('');
+        var curChunk = 0;
 
-        console.log(b);
+        // TODO: loop through phoenemes
+        // when playing is done, get next phoeneme
 
 
-        console.log('length of buf before: ' + buf.length);
+        var player = document.getElementById('audio') || new Audio();
+        // proof-of-concept: for repetition....
+        // http://stackoverflow.com/questions/16874529/playing-sounds-sequentially-html5?rq=1
+        player.onended = function() {
+            console.log('duration: ' + this.duration);
+            this.pause();
+            this.currentTime = 0;
+            curChunk++;
+            if (curChunk >= chunks.length) {
+                console.log('all done!');
+            } else {
+                builder(chunks[curChunk], speed, f0, waveBytes);
+            }
+        };
 
-        // reduce size of buffer if < 30 seconds
-        buf = buf.subarray(0, b);
+        var builder = function(text, speed, f0, waveBytes) {
 
-        console.log('length of buf after:  ' + buf.length);
+            // console.log('freq: ' + f0 + '\nspeed: ' + speed + '\nwaveBytes: ' + waveBytes);
+            console.log('text: ' + text);
 
-        // there doesn't seem to be an easy way to repeat
-        // http://jsfiddle.net/tfSTh/1/
-        // total time, and countdown
-        // can use that for a timer to replay....
-        playAudioBuffer(buf);
+            var buf = new Int16Array(new ArrayBuffer(waveBytes));
+            var b = SynthSpeech(buf, text, f0, speed, 0);
 
+            // reduce size of buffer if < 30 seconds
+            buf = buf.subarray(0, b);
+            console.log('buflength: ' + buf.length);
+
+            var maxAmp = 22000;
+            var audioString = "";
+            for (var i=0; i < buf.length; i++) {
+                var y = buf[i] / maxAmp * 0x7800;
+                audioString += String.fromCharCode(y & 255, (y >> 8) & 255);
+            }
+
+            var data = "data:audio/wav;base64,"
+                    + btoa(atob("UklGRti/UABXQVZFZm10IBAAAAABAAIARKwAABCxAgAEABAAZGF0YbS/UAA")
+                           + audioString);
+            console.log(data);
+            player.src = data;
+            player.play();
+
+        };
+
+        builder(chunks[curChunk], speed, f0, waveBytes);
+        return;
 
     } catch (e) {
         alert("Something went horribly wrong:\n" + e);
@@ -71,7 +103,7 @@ var playAudioBuffer = function(buf) {
 
 };
 
-// TODO: parse opts to see if we've passed in new defaults
+
 var getQuerystring = function(key, default_)
 {
     if (default_==null) default_="";

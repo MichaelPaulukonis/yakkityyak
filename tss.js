@@ -57,9 +57,6 @@ var g_phonemes = {
 
 // Synthesizes speech and adds it to specified buffer
 function SynthSpeech ( buf, text, f0, speed, bufPos ) {
-
-    console.log("bufLength: " + buf.length + " bufPos: " + bufPos);
-
     var startBuf = bufPos;
 
     // Debug
@@ -117,10 +114,10 @@ function SynthSpeech ( buf, text, f0, speed, bufPos ) {
         }
     }
 
-    if (window.console) {
-        console.log("min/max buf = " + minBuf + "/" + maxBuf);
-        console.log("bufLength: " + buf.length + " bufPos: " + bufPos);
-    }
+    // if (window.console) {
+    //     console.log("min/max buf = " + minBuf + "/" + maxBuf);
+    //     console.log("bufLength: " + buf.length + " bufPos: " + bufPos);
+    // }
 
     buf = buf.subarray(0, bufPos);
 
